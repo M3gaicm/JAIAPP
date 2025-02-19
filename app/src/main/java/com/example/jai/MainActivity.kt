@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.NavigationBarItemDefaults
 import com.example.jai.navBar.AccountScreen
 import com.example.jai.navBar.HomeScreen
+import com.example.jai.navBar.LoginScreen
 import com.example.jai.navBar.SettingsScreen
 
 
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JAITheme {
+            // JAITheme
                 val navController = rememberNavController()
                 val navigateAction = remember(navController)
                 {
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     selectedDestination = selectedDestination,
                     navigateTopLevelDestination = navigateAction::navigateTo
                 )
-            }
+
         }
     }
 
@@ -60,19 +61,27 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     modifier = Modifier.weight(1f),
                     navController = navController,
-                    startDestination = MyAppRoute.HOME
+                    startDestination = MyAppRoute.LOGIN
                 ) {
-                    composable(MyAppRoute.HOME, enterTransition = { null }, exitTransition = { null }) {
+                    composable(MyAppRoute.LOGIN) {
+                        LoginScreen(navController)
+                    }
+                    composable(MyAppRoute.HOME) {
                         HomeScreen()
                     }
-                    composable(MyAppRoute.ACCOUNT, enterTransition = { null }, exitTransition = { null }) {
+                    composable(MyAppRoute.ACCOUNT) {
                         AccountScreen()
                     }
-                    composable(MyAppRoute.SETTINGS, enterTransition = { null }, exitTransition = { null }) {
+                    composable(MyAppRoute.SETTINGS) {
                         SettingsScreen()
                     }
                 }
-                MyAppBottomNavigation(selectedDestination = selectedDestination, navigateTopLevelDestination = navigateTopLevelDestination)
+                if (selectedDestination != MyAppRoute.LOGIN) {
+                    MyAppBottomNavigation(
+                        selectedDestination = selectedDestination,
+                        navigateTopLevelDestination = navigateTopLevelDestination
+                    )
+                }
             }
         }
     }

@@ -45,6 +45,7 @@ val TOP_LEVEL_DESTINATIONS = listOf(
 
 object MyAppRoute
 {
+    const val LOGIN = "login"
     const val HOME = "home"
     const val ACCOUNT = "account"
     const val SETTINGS = "settings"
