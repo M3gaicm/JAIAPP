@@ -9,8 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun SettingsScreen() {
-    val backgroundColor = MaterialTheme.colorScheme.surface // Directly access the background color
-    Log.d("HomeScreen", "Recomposed!") // Debugging in Logcat
+    val backgroundColor = Color(0, 0, 0)
 
     CenteredContent(backgroundColor = backgroundColor) {
         Text(

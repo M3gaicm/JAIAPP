@@ -12,11 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
-
 @Composable
 fun HomeScreen() {
-    val backgroundColor = MaterialTheme.colorScheme.surface // Directly access the background color
-    Log.d("HomeScreen", "Recomposed!") // Debugging in Logcat
+    val backgroundColor = Color(0, 0, 0)
+    Log.d("HomeScreen", "Recomposed!")
 
     CenteredContent(backgroundColor = backgroundColor) {
         Text(
@@ -32,11 +31,10 @@ fun CenteredContent(backgroundColor: Color, content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor), // Apply background color here
+            .background(backgroundColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
     }
 }
-

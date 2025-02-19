@@ -91,7 +91,9 @@ class MainActivity : ComponentActivity() {
         selectedDestination: String,
         navigateTopLevelDestination: (MyAppTopLevelDestination) -> Unit
     ) {
-        NavigationBar {
+        NavigationBar(
+            containerColor = Color(0xFF808080) // Gris en formato RGB para el fondo
+        ) {
             TOP_LEVEL_DESTINATIONS.forEach { destination ->
                 NavigationBarItem(
                     selected = selectedDestination == destination.route,
@@ -103,13 +105,13 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = Color(0xFF800080) // Color morado
+                        indicatorColor = Color(0xFF800080) // Color morado para el indicador
                     )
                 )
             }
         }
     }
+    }
 
 
 
-}
