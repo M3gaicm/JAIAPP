@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun AccountScreen() {
-    val backgroundColor = Color(0, 0, 0)
+    val backgroundColor = Color(20,19,24)
 
     CenteredContent(backgroundColor = backgroundColor) {
         Text(

@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import com.example.jai.ui.theme.JAITheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,7 +24,11 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import com.example.jai.navBar.AccountScreen
 import com.example.jai.navBar.HomeScreen
 import com.example.jai.navBar.LoginScreen
+import com.example.jai.navBar.MyAppNavigationActions
+import com.example.jai.navBar.MyAppRoute
+import com.example.jai.navBar.MyAppTopLevelDestination
 import com.example.jai.navBar.SettingsScreen
+import com.example.jai.navBar.TOP_LEVEL_DESTINATIONS
 
 
 class MainActivity : ComponentActivity() {
@@ -92,7 +95,7 @@ class MainActivity : ComponentActivity() {
         navigateTopLevelDestination: (MyAppTopLevelDestination) -> Unit
     ) {
         NavigationBar(
-            containerColor = Color(0xFF808080) // Gris en formato RGB para el fondo
+            containerColor = Color(35,34,42) // Gris en formato RGB para el fondo
         ) {
             TOP_LEVEL_DESTINATIONS.forEach { destination ->
                 NavigationBarItem(

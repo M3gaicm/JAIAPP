@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun HomeScreen() {
-    val backgroundColor = Color(0, 0, 0)
+    val backgroundColor = Color(20,19,24)
     Log.d("HomeScreen", "Recomposed!")
 
     CenteredContent(backgroundColor = backgroundColor) {
