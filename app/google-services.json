@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "980153996173",
+    "project_id": "jaiapp-581c3",
+    "storage_bucket": "jaiapp-581c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980153996173:android:6e1b20953a9a00a14b63c4",
+        "android_client_info": {
+          "package_name": "com.example.jai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMWirgj8bBY386LWSox5F7C_V6QsxFB0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
