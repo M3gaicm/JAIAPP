@@ -61,10 +61,11 @@ fun AccountScreen(navController: NavController) {
             onClick = {
                 scope.launch {
                     FirebaseAuth.getInstance().signOut()
-                    Toast.makeText(null, "Sesión cerrada", Toast.LENGTH_SHORT).show()
-                    navController.navigate("login")
+                    navController.navigate(MyAppRoute.LOGIN) {
+                    }
                 }
-            },
+            }
+            ,
             colors = ButtonDefaults.buttonColors(),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier

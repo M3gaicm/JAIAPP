@@ -17,6 +17,7 @@ import com.example.jai.ui.theme.JAITheme
 import com.example.jai.navBar.*
 import com.example.jai.auth.LoginScreen
 import com.example.jai.login.SignUpScreen
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
 
@@ -40,12 +41,11 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun MyAppContent(
-        modifier: Modifier = Modifier,
-        navController: NavHostController,
-        selectedDestination: String,
-        navigateTopLevelDestination: (MyAppTopLevelDestination) -> Unit
-    ) {
+    fun MyAppContent(modifier: Modifier = Modifier, navController: NavHostController, selectedDestination: String, navigateTopLevelDestination: (MyAppTopLevelDestination) -> Unit) {
+        val firebaseAuth = FirebaseAuth.getInstance()  // Initialize FirebaseAuth
+        var route: String = MyAppRoute.LOGIN;
+        if (firebaseAuth.currentUser != null) route = MyAppRoute.HOME;
+
         Scaffold(
             topBar = {
                 if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP) {
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
             Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
                 NavHost(
                     navController = navController,
-                    startDestination = MyAppRoute.LOGIN,
+                    startDestination = route,
                     modifier = Modifier.weight(1f)
                 ) {
                     composable(MyAppRoute.LOGIN) { LoginScreen(navController) }
