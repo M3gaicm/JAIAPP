@@ -31,16 +31,16 @@ val TOP_LEVEL_DESTINATIONS = listOf(
     iconTextId = R.string.home
 ),
     MyAppTopLevelDestination(
+        route = MyAppRoute.SETTINGS,
+        selectedIcon = Icons.Default.Settings,
+        iconTextId = R.string.settings
+    ),
+    MyAppTopLevelDestination(
         route = MyAppRoute.ACCOUNT,
         selectedIcon = Icons.Default.AccountCircle,
         iconTextId = R.string.account
     )
-    ,
-    MyAppTopLevelDestination(
-        route = MyAppRoute.SETTINGS,
-        selectedIcon = Icons.Default.Settings,
-        iconTextId = R.string.settings
-    )
+
 )
 
 object MyAppRoute
