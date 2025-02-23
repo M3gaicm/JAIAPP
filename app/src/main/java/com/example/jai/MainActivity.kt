@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
         Scaffold(
             topBar = {
-                if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP) {
+                if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP && selectedDestination != MyAppRoute.PHOTOPROFILE) {
                     TopAppBar(
                         title = { Text(text = "MyApp") },
                         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(35, 34, 42))
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
             },
             bottomBar = {
-                if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP) {
+                if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP && selectedDestination != MyAppRoute.PHOTOPROFILE) {
                     MyAppBottomNavigation(selectedDestination, navigateTopLevelDestination)
                 }
             }
@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     composable(MyAppRoute.GASTO) { NuevoGastoScreen(navController, viewModel) }
                     composable(MyAppRoute.ACCOUNT) { AccountScreen(navController) }
                     composable(MyAppRoute.SETTINGS) { SettingsScreen() }
+                    composable(MyAppRoute.PHOTOPROFILE) { PhotoProfile(navController)}
                 }
             }
         }

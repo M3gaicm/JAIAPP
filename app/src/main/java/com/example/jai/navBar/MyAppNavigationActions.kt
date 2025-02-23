@@ -51,4 +51,5 @@ object MyAppRoute
     const val ACCOUNT = "account"
     const val SETTINGS = "settings"
     const val GASTO = "nuevo_gasto"
+    const val PHOTOPROFILE = "photoprofile"
 }
