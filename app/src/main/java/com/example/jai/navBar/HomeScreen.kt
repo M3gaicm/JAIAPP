@@ -1,6 +1,5 @@
 package com.example.jai.navBar
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -25,9 +24,7 @@ fun HomeScreen(viewModel: GastoViewModel, navController: NavController) {
     Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Lista de gastos guardados
             if (viewModel.gastos.isEmpty()) {
-                // Mostrar un mensaje si no hay gastos
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -35,7 +32,7 @@ fun HomeScreen(viewModel: GastoViewModel, navController: NavController) {
                     Text("No hay gastos aún", color = Color.White)
                 }
             } else {
-                LazyColumn(modifier = Modifier.weight(1f)) { // Aquí usamos weight para darle espacio flexible
+                LazyColumn(modifier = Modifier.weight(1f)) {
                     items(viewModel.gastos) { gasto ->
                         Card(
                             modifier = Modifier
@@ -91,7 +88,7 @@ fun FloatingMenu(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     MenuButton(text = "Nuevo Gasto", onClick = {
-                        navController.navigate("nuevo_gasto") // ✅ Ahora el botón abre la pantalla correcta
+                        navController.navigate("nuevo_gasto")
                     })
                 }
             }
@@ -123,5 +120,3 @@ fun MenuButton(text: String, onClick: () -> Unit) {
         Text(text = text, color = Color.White)
     }
 }
-
-
