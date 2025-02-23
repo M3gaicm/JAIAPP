@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.jai.ui.theme.JAITheme
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
     fun MyAppContent(modifier: Modifier = Modifier, navController: NavHostController, selectedDestination: String, navigateTopLevelDestination: (MyAppTopLevelDestination) -> Unit) {
         val firebaseAuth = FirebaseAuth.getInstance()  // Initialize FirebaseAuth
         var route: String = MyAppRoute.LOGIN;
+        val viewModel: GastoViewModel = viewModel()
+
         if (firebaseAuth.currentUser != null) route = MyAppRoute.HOME;
 
         Scaffold(
@@ -69,7 +72,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(MyAppRoute.LOGIN) { LoginScreen(navController) }
                     composable(MyAppRoute.SIGNUP) { SignUpScreen(navController) }
-                    composable(MyAppRoute.HOME) { HomeScreen() }
+                    composable(MyAppRoute.HOME) { HomeScreen(viewModel, navController) }
+                    composable(MyAppRoute.GASTO) { NuevoGastoScreen(navController, viewModel) }
                     composable(MyAppRoute.ACCOUNT) { AccountScreen(navController) }
                     composable(MyAppRoute.SETTINGS) { SettingsScreen() }
                 }

@@ -16,26 +16,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.navigation.NavController
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: GastoViewModel, navController: NavController) {
     val backgroundColor = Color(20, 19, 24)
-    val expenses = remember { mutableStateListOf<Expense>() }
-    Log.d("HomeScreen", "Recomposed!")
 
     Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
         Column(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                items(expenses) { expense ->
-                    ExpenseCard(expense)
+
+            // Lista de gastos guardados
+            if (viewModel.gastos.isEmpty()) {
+                // Mostrar un mensaje si no hay gastos
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("No hay gastos aún", color = Color.White)
+                }
+            } else {
+                LazyColumn(modifier = Modifier.weight(1f)) { // Aquí usamos weight para darle espacio flexible
+                    items(viewModel.gastos) { gasto ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("Viaje: ${gasto.nombreViaje}", style = MaterialTheme.typography.titleMedium)
+                                Text("Creador: ${gasto.creador}")
+                                Text("Participantes: ${gasto.participantes.joinToString(", ")}")
+                                Text("Coste: ${gasto.coste}€")
+                            }
+                        }
+                    }
                 }
             }
-            FloatingMenu(onExpenseAdded = { expense ->
-                Log.d("ExpenseAdded", "Expense added: $expense")
-                expenses.add(expense)
-            })
         }
+
+        FloatingMenu(navController)
     }
 }
 
@@ -53,9 +73,8 @@ fun CenteredContent(backgroundColor: Color, content: @Composable () -> Unit) {
 }
 
 @Composable
-fun FloatingMenu(onExpenseAdded: (Expense) -> Unit) {
+fun FloatingMenu(navController: NavController) {
     var menuExpanded by remember { mutableStateOf(false) }
-    var showPopup by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
@@ -71,7 +90,9 @@ fun FloatingMenu(onExpenseAdded: (Expense) -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    MenuButton(text = "Agregar Participante", onClick = { showPopup = true })
+                    MenuButton(text = "Nuevo Gasto", onClick = {
+                        navController.navigate("nuevo_gasto") // ✅ Ahora el botón abre la pantalla correcta
+                    })
                 }
             }
 
@@ -85,15 +106,9 @@ fun FloatingMenu(onExpenseAdded: (Expense) -> Unit) {
             }
         }
     }
-
-    if (showPopup) {
-        ParticipantPopup(onDismiss = { showPopup = false }, onExpenseAdded = { expense ->
-            Log.d("ExpenseAdded", "Expense added from popup: $expense")
-            onExpenseAdded(expense)
-            showPopup = false
-        })
-    }
 }
+
+
 
 @Composable
 fun MenuButton(text: String, onClick: () -> Unit) {
@@ -109,76 +124,4 @@ fun MenuButton(text: String, onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun ExpenseCard(expense: Expense) {
-    Log.d("ExpenseCard", "Rendering expense: $expense")
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Gray)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Participantes: ${expense.participants.joinToString(", ")}", color = Color.White)
-        }
-    }
-}
 
-@Composable
-fun ParticipantPopup(onDismiss: () -> Unit, onExpenseAdded: (Expense) -> Unit) {
-    var participant by remember { mutableStateOf("") }
-    val participants = remember { mutableStateListOf<String>() }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-    // Ocultar el teclado cuando el cuadro de diálogo es mostrado
-    LaunchedEffect(key1 = true) {
-        keyboardController?.hide()
-    }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Agregar Participante") },
-        text = {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        value = participant,
-                        onValueChange = { participant = it },
-                        label = { Text("Nombre del Participante") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = {
-                        if (participant.isNotBlank()) {
-                            participants.add(participant)
-                            Log.d("ParticipantAdded", "Added: $participant")
-                            participant = ""  // Reset input field
-                        }
-                    }) {
-                        Text("+")
-                    }
-                }
-
-                LazyColumn(modifier = Modifier.heightIn(min = 50.dp, max = 150.dp)) {
-                    items(participants.toList()) { name ->
-                        Text(name, color = Color.Black)
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                if (participants.isNotEmpty()) {
-                    val newExpense = Expense("Usuario Actual", participants.toList(), "0")
-                    Log.d("ExpenseAdded", "New expense created: $newExpense")
-                    onExpenseAdded(newExpense)
-                }
-            }) { Text("Confirmar") }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) { Text("Cancelar") }
-        }
-    )
-}
-
-data class Expense(val creator: String, val participants: List<String>, val amount: String)

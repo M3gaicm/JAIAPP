@@ -50,4 +50,5 @@ object MyAppRoute
     const val HOME = "home"
     const val ACCOUNT = "account"
     const val SETTINGS = "settings"
+    const val GASTO = "nuevo_gasto"
 }
