@@ -12,9 +12,12 @@ data class Gasto(
 
 class GastoViewModel : ViewModel() {
     var gastos = mutableStateListOf<Gasto>()
-        private set
 
     fun agregarGasto(gasto: Gasto) {
         gastos.add(gasto)
+    }
+
+    fun eliminarGasto(gasto: Gasto) {
+        gastos.remove(gasto)
     }
 }

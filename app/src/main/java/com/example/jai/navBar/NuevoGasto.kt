@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.input.VisualTransformation
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,11 +21,23 @@ fun NuevoGastoScreen(navController: NavController, viewModel: GastoViewModel) {
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
     var nombreViaje by remember { mutableStateOf("") }
-    val creador = currentUser?.email ?: "Usuario Desconocido"
+    var creador  by remember { mutableStateOf("") }
     var nuevoParticipante by remember { mutableStateOf("") }
     var participantes by remember { mutableStateOf(listOf<String>()) }
     var coste by remember { mutableStateOf("") }
 
+    val db = FirebaseFirestore.getInstance()
+
+    LaunchedEffect(currentUser?.uid) {
+        currentUser?.uid?.let { uid ->
+            db.collection("usuarios").document(uid).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        creador = document.getString("nombre") ?: "Usuario Desconocido"
+                    }
+                }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(

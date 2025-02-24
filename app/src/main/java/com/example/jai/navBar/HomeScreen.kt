@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,11 +42,30 @@ fun HomeScreen(viewModel: GastoViewModel, navController: NavController) {
                                 .padding(8.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Viaje: ${gasto.nombreViaje}", style = MaterialTheme.typography.titleMedium)
-                                Text("Creador: ${gasto.creador}")
-                                Text("Participantes: ${gasto.participantes.joinToString(", ")}")
-                                Text("Coste: ${gasto.coste}€")
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Viaje: ${gasto.nombreViaje}", style = MaterialTheme.typography.titleMedium)
+                                    Text("Creador: ${gasto.creador}")
+                                    Text("Participantes: ${gasto.participantes.joinToString(", ")}")
+                                    Text("Coste: ${gasto.coste}€")
+                                }
+
+                                IconButton(
+                                    onClick = {
+                                        viewModel.eliminarGasto(gasto)
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Eliminar gasto",
+                                        tint = Color.Red
+                                    )
+                                }
                             }
                         }
                     }
