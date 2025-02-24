@@ -29,7 +29,7 @@ fun SignUpScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor), // Aplica el color de fondo
+            .background(backgroundColor),
         contentAlignment = Alignment.Center
     )
     {

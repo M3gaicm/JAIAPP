@@ -27,8 +27,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun PhotoProfile(navController: NavController) {
     val names = listOf(
         "Carlos", "Ana", "Juan", "Maria", "Pedro", "Sofia",
-        "Luis", "Elena", "Diego", "Carmen", "Miguel", "Laura"
+        "Luis", "Elena", "Diego", "Carmen", "Miguel", "Laura",
+        "Antonio", "Isabel", "Francisco", "Jose", "Pilar", "Javier",
+        "Leonardo", "Monica", "Nicolas", "Olivia", "Pablo", "Rosa",
+        "Samuel", "Teresa", "Victor", "Wendy", "Ximena", "Yolanda",
+        "Zacarias", "Adriana", "Benjamin", "Camila", "Daniel", "Estefania"
     )
+
     var selectedAvatar by remember { mutableStateOf("Carlos") }
 
 
