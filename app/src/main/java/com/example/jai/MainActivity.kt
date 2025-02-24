@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     composable(MyAppRoute.HOME) { HomeScreen(viewModel, navController) }
                     composable(MyAppRoute.GASTO) { NuevoGastoScreen(navController, viewModel) }
                     composable(MyAppRoute.ACCOUNT) { AccountScreen(navController) }
-                    composable(MyAppRoute.SETTINGS) { SettingsScreen() }
+                    composable(MyAppRoute.NOTIFICATION) { NotificationsScreen()  }
                     composable(MyAppRoute.PHOTOPROFILE) { PhotoProfile(navController)}
                     composable(MyAppRoute.PREGUNTAS) { preguntas()}
                 }

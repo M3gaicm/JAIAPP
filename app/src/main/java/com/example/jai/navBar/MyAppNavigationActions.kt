@@ -3,6 +3,7 @@ package com.example.jai.navBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -31,8 +32,8 @@ val TOP_LEVEL_DESTINATIONS = listOf(
     iconTextId = R.string.home
 ),
     MyAppTopLevelDestination(
-        route = MyAppRoute.SETTINGS,
-        selectedIcon = Icons.Default.Settings,
+        route = MyAppRoute.NOTIFICATION,
+        selectedIcon = Icons.Default.Notifications,
         iconTextId = R.string.settings
     ),
     MyAppTopLevelDestination(
@@ -49,7 +50,7 @@ object MyAppRoute
     const val SIGNUP = "signup";
     const val HOME = "home"
     const val ACCOUNT = "account"
-    const val SETTINGS = "settings"
+    const val NOTIFICATION = "notifications"
     const val GASTO = "nuevo_gasto"
     const val PHOTOPROFILE = "photoprofile"
     const val PREGUNTAS = "preguntas"
