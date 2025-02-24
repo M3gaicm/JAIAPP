@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,9 +54,20 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP && selectedDestination != MyAppRoute.PHOTOPROFILE) {
-                    TopAppBar(
-                        title = { Text(text = "MyApp") },
-                        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(35, 34, 42))
+                    CenterAlignedTopAppBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = { Text(text = "MyApp", color = Color.White) },
+                        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(35, 34, 42)),
+                        actions = {
+                            IconButton(onClick = {navController.navigate(MyAppRoute.PREGUNTAS) }) {
+
+                                Icon(
+                                    imageVector = Icons.Default.Info, // Icono de "?"
+                                    contentDescription = "Ayuda",
+                                    tint = Color.White // Color del icono
+                                )
+                            }
+                        }
                     )
                 }
             },
@@ -77,6 +90,7 @@ class MainActivity : ComponentActivity() {
                     composable(MyAppRoute.ACCOUNT) { AccountScreen(navController) }
                     composable(MyAppRoute.SETTINGS) { SettingsScreen() }
                     composable(MyAppRoute.PHOTOPROFILE) { PhotoProfile(navController)}
+                    composable(MyAppRoute.PREGUNTAS) { preguntas()}
                 }
             }
         }

@@ -52,4 +52,5 @@ object MyAppRoute
     const val SETTINGS = "settings"
     const val GASTO = "nuevo_gasto"
     const val PHOTOPROFILE = "photoprofile"
+    const val PREGUNTAS = "preguntas"
 }
