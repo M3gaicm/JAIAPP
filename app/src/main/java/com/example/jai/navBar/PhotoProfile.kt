@@ -15,11 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.jai.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -40,7 +42,7 @@ fun PhotoProfile(navController: NavController) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color(0xFF23222A))
+            .background(colorResource(id = R.color.background_dark))
             .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -49,7 +51,7 @@ fun PhotoProfile(navController: NavController) {
 
         Box(
             modifier = Modifier
-                .background(Color(0x26FFFFFF), RoundedCornerShape(15.dp))
+                .background(colorResource(id = R.color.background_light), RoundedCornerShape(15.dp))
                 .padding(15.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -94,7 +96,7 @@ fun PhotoProfile(navController: NavController) {
                     cambiarFotoPerfil(selectedAvatar)
                     navController.navigate(MyAppRoute.ACCOUNT)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF800080)),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary_purple)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -122,7 +124,7 @@ fun AvatarItem(name: String, isSelected: Boolean, onClick: () -> Unit) {
             .width(100.dp)
             .clickable { onClick() }
             .padding(10.dp)
-            .background(if (isSelected) Color(0xFF800080) else Color(0x26FFFFFF), RoundedCornerShape(15.dp)),
+            .background(if (isSelected) colorResource(id = R.color.primary_purple) else colorResource(id = R.color.background_light), RoundedCornerShape(15.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(20.dp))

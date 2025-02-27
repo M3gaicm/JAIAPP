@@ -12,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.jai.navBar.MyAppRoute
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.jai.R
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -25,7 +27,7 @@ fun LoginScreen(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val auth = FirebaseAuth.getInstance()
-    val backgroundColor = Color(20,19,24)
+    val backgroundColor = colorResource(id = R.color.background)
 
     Box(
         modifier = Modifier

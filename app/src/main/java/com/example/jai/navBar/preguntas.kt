@@ -25,8 +25,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.colorResource
 
 import androidx.compose.ui.res.vectorResource
+import com.example.jai.R
 
 class InfoScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +49,16 @@ fun preguntas() {
         "¿Puedo exportar los gastos?" to "Sí, puedes exportar el resumen de gastos y balances en formato PDF o compartirlo directamente desde la aplicación."
     )
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF232228)).padding(16.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.background_dark)).padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.Info, contentDescription = "Info", tint = Color(0xFFFF8000))
+            Icon(imageVector = Icons.Default.Info, contentDescription = "Info", tint = colorResource(id = R.color.primary_orange))
             Spacer(modifier = Modifier.width(8.dp))
             Text("Acerca de SplitPay", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
 
         Card(
             modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)) // Gris oscuro
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.card_background)) // Gris oscuro
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text("¿Qué es SplitPay?", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
@@ -85,8 +87,8 @@ fun preguntas() {
 
 @Composable
 fun FeatureItem(icon: ImageVector, text: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(Color(0xFF2A2931)).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-        Icon(imageVector = icon, contentDescription = text, tint = Color(0xFFFF8000))
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(colorResource(id = R.color.feature_background)).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(imageVector = icon, contentDescription = text, tint =colorResource(id = R.color.primary_orange))
         Spacer(modifier = Modifier.width(8.dp))
         Text(text, color = Color.White)
     }
@@ -96,7 +98,7 @@ fun FeatureItem(icon: ImageVector, text: String) {
 fun FAQItem(question: String, answer: String) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)) // Gris oscuro
+        colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.card_background)) // Gris oscuro
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(question, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)

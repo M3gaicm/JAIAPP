@@ -7,12 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.jai.R
 
 @Composable
 fun NotificationsScreen() {
-    val backgroundColor = Color(20, 19, 24)
+    val backgroundColor = colorResource(id = R.color.background)
 
     Column(
         modifier = Modifier
@@ -43,13 +45,16 @@ fun NotificationCard(title: String, message: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(40, 40, 50))
+        colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.card_background)) // ✅ Usar colors.xml
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, fontSize = 18.sp, color = Color.White)
+            Text(text = title, fontSize = 18.sp, color = colorResource(id = R.color.text_primary))
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = message, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+            Text(
+                text = message,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.text_secondary)
+            )
         }
     }
 }
-
