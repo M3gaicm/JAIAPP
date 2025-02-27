@@ -24,6 +24,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.jai.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun PhotoProfile(navController: NavController) {
@@ -37,7 +39,9 @@ fun PhotoProfile(navController: NavController) {
     )
 
     var selectedAvatar by remember { mutableStateOf("Carlos") }
-
+    val showSnackbar = remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope() // Guardamos el CoroutineScope
 
     Column(
         Modifier
@@ -88,20 +92,36 @@ fun PhotoProfile(navController: NavController) {
                             selectedAvatar = name
                         }
                     }
+                    if (showSnackbar.value) {
+                        LaunchedEffect(Unit) {
+                            snackbarHostState.showSnackbar("Foto de perfil actualizada")
+                            showSnackbar.value = false
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
+
             Button(
                 onClick = {
                     cambiarFotoPerfil(selectedAvatar)
-                    navController.navigate(MyAppRoute.ACCOUNT)
+                    showSnackbar.value = true
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Foto de perfil actualizada")
+                        delay(1000)
+                        navController.navigate(MyAppRoute.ACCOUNT)
+
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary_purple)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Guardar Selección", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Cambiar Foto")
             }
+
+
+            SnackbarHost(hostState = snackbarHostState)
         }
     }
 }

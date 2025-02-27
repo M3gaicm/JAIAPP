@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 if (selectedDestination != MyAppRoute.LOGIN && selectedDestination != MyAppRoute.SIGNUP && selectedDestination != MyAppRoute.PHOTOPROFILE) {
                     CenterAlignedTopAppBar(
                         modifier = Modifier.fillMaxWidth(),
-                        title = { Text(text = "MyApp", color = Color.White) },
+                        title = { Text(text = stringResource(R.string.app_name), color = Color.White) },
                         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(35, 34, 42)),
                         actions = {
                             IconButton(onClick = {navController.navigate(MyAppRoute.PREGUNTAS) }) {
