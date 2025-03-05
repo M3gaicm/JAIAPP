@@ -23,8 +23,12 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.jai.R
 import com.example.jai.Repository.UserRepository
+import com.example.jai.navBar.ApiService
+import com.example.jai.navBar.RetrofitClient
+import com.example.jai.navBar.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -51,77 +55,96 @@ fun PhotoProfile(navController: NavController) {
     val userRepository = remember { UserRepository() }
     var names by remember { mutableStateOf<List<String>>(emptyList()) }
     var selectedAvatar by remember { mutableStateOf("") }
-    val showSnackbar = remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val users = userRepository.getUsers()  // Usamos el Repository
-        names = users.map { it.name }
-        selectedAvatar = names.firstOrNull() ?: ""
+        try {
+            delay(3000);
+            val users = userRepository.getUsers()
+            names = users.map { it.name }
+            selectedAvatar = names.firstOrNull() ?: ""
+        } catch (e: Exception) {
+            errorMessage = "Error al cargar los avatares"
+        } finally {
+            isLoading = false
+        }
     }
 
     Column(
         Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.background_dark))
-            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Seleccionar Avatar", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(20.dp))
 
-        if (selectedAvatar.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .background(colorResource(id = R.color.background_light), RoundedCornerShape(15.dp))
-                    .padding(15.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = rememberAsyncImagePainter("https://api.dicebear.com/7.x/avataaars/png?seed=$selectedAvatar"),
-                        contentDescription = "Avatar seleccionado",
-                        modifier = Modifier.size(80.dp).clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(15.dp))
-                    Text("Avatar seleccionado", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                }
+        if (isLoading) {
+            CircularProgressIndicator(color = Color.White)
+        } else if (errorMessage != null) {
+            Text(errorMessage!!, color = Color.Red, fontSize = 16.sp)
+        } else {
+            if (selectedAvatar.isNotEmpty()) {
+                AvatarDisplay(selectedAvatar)
+                Spacer(modifier = Modifier.height(20.dp))
             }
-            Spacer(modifier = Modifier.height(20.dp))
-        }
 
-        Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-        ) {
-            names.chunked(3).forEach { row ->
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    row.forEach { name ->
-                        AvatarItem(name, name == selectedAvatar) {
-                            selectedAvatar = name
+            Column(
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+            ) {
+                names.chunked(3).forEach { row ->
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        row.forEach { name ->
+                            AvatarItem(name, name == selectedAvatar) {
+                                selectedAvatar = name
+                            }
                         }
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
-                Spacer(modifier = Modifier.height(10.dp))
-            }
 
-            Button(
-                onClick = {
-                    cambiarFotoPerfil(selectedAvatar)
-                    showSnackbar.value = true
-                    scope.launch {
-                        snackbarHostState.showSnackbar("Foto de perfil actualizada")
-                        navController.navigate(MyAppRoute.ACCOUNT)
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary_purple)),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Cambiar Foto")
+                Button(
+                    onClick = {
+                        cambiarFotoPerfil(selectedAvatar)
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Foto de perfil actualizada")
+                            navController.navigate(MyAppRoute.ACCOUNT)
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary_purple)),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cambiar Foto")
+                }
             }
+        }
 
-            SnackbarHost(hostState = snackbarHostState)
+        SnackbarHost(hostState = snackbarHostState)
+    }
+}
+
+@Composable
+fun AvatarDisplay(selectedAvatar: String) {
+    Box(
+        modifier = Modifier
+            .background(colorResource(id = R.color.background_light), RoundedCornerShape(15.dp))
+            .padding(15.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = rememberAsyncImagePainter("https://api.dicebear.com/7.x/avataaars/png?seed=$selectedAvatar"),
+                contentDescription = "Avatar seleccionado",
+                modifier = Modifier.size(80.dp).clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(15.dp))
+            Text("Avatar seleccionado", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 }
