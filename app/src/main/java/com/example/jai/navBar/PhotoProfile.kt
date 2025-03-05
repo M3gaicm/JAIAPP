@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.jai.R
+import com.example.jai.Repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
@@ -47,6 +48,7 @@ object RetrofitClient {
 
 @Composable
 fun PhotoProfile(navController: NavController) {
+    val userRepository = remember { UserRepository() }
     var names by remember { mutableStateOf<List<String>>(emptyList()) }
     var selectedAvatar by remember { mutableStateOf("") }
     val showSnackbar = remember { mutableStateOf(false) }
@@ -54,13 +56,9 @@ fun PhotoProfile(navController: NavController) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        try {
-            val users = RetrofitClient.apiService.getUsers()
-            names = users.map { it.name }
-            selectedAvatar = names.firstOrNull() ?: ""
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val users = userRepository.getUsers()  // Usamos el Repository
+        names = users.map { it.name }
+        selectedAvatar = names.firstOrNull() ?: ""
     }
 
     Column(
