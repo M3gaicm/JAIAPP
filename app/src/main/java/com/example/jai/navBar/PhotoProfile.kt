@@ -24,24 +24,44 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.jai.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+
+// Retrofit API Service
+interface ApiService {
+    @GET("users")
+    suspend fun getUsers(): List<User>
+}
+
+// Retrofit Client
+object RetrofitClient {
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://jsonplaceholder.typicode.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val apiService: ApiService = retrofit.create(ApiService::class.java)
+}
 
 @Composable
 fun PhotoProfile(navController: NavController) {
-    val names = listOf(
-        "Carlos", "Ana", "Juan", "Maria", "Pedro", "Sofia",
-        "Luis", "Elena", "Diego", "Carmen", "Miguel", "Laura",
-        "Antonio", "Isabel", "Francisco", "Jose", "Pilar", "Javier",
-        "Leonardo", "Monica", "Nicolas", "Olivia", "Pablo", "Rosa",
-        "Samuel", "Teresa", "Victor", "Wendy", "Ximena", "Yolanda",
-        "Zacarias", "Adriana", "Benjamin", "Camila", "Daniel", "Estefania"
-    )
-
-    var selectedAvatar by remember { mutableStateOf("Carlos") }
+    var names by remember { mutableStateOf<List<String>>(emptyList()) }
+    var selectedAvatar by remember { mutableStateOf("") }
     val showSnackbar = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope() // Guardamos el CoroutineScope
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        try {
+            val users = RetrofitClient.apiService.getUsers()
+            names = users.map { it.name }
+            selectedAvatar = names.firstOrNull() ?: ""
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     Column(
         Modifier
@@ -49,53 +69,38 @@ fun PhotoProfile(navController: NavController) {
             .background(colorResource(id = R.color.background_dark))
             .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text("Seleccionar Avatar", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(20.dp))
 
-        Box(
-            modifier = Modifier
-                .background(colorResource(id = R.color.background_light), RoundedCornerShape(15.dp))
-                .padding(15.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = rememberAsyncImagePainter("https://api.dicebear.com/7.x/avataaars/png?seed=$selectedAvatar"),
-                    contentDescription = "Avatar seleccionado",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.width(15.dp))
-                Column {
+        if (selectedAvatar.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .background(colorResource(id = R.color.background_light), RoundedCornerShape(15.dp))
+                    .padding(15.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = rememberAsyncImagePainter("https://api.dicebear.com/7.x/avataaars/png?seed=$selectedAvatar"),
+                        contentDescription = "Avatar seleccionado",
+                        modifier = Modifier.size(80.dp).clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
                     Text("Avatar seleccionado", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
-
+            Spacer(modifier = Modifier.height(20.dp))
         }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text("Avatares Disponibles", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
-        Spacer(modifier = Modifier.height(10.dp))
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
         ) {
             names.chunked(3).forEach { row ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     row.forEach { name ->
                         AvatarItem(name, name == selectedAvatar) {
                             selectedAvatar = name
-                        }
-                    }
-                    if (showSnackbar.value) {
-                        LaunchedEffect(Unit) {
-                            snackbarHostState.showSnackbar("Foto de perfil actualizada")
-                            showSnackbar.value = false
                         }
                     }
                 }
@@ -108,9 +113,7 @@ fun PhotoProfile(navController: NavController) {
                     showSnackbar.value = true
                     scope.launch {
                         snackbarHostState.showSnackbar("Foto de perfil actualizada")
-                        delay(1000)
                         navController.navigate(MyAppRoute.ACCOUNT)
-
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary_purple)),
@@ -119,7 +122,6 @@ fun PhotoProfile(navController: NavController) {
             ) {
                 Text("Cambiar Foto")
             }
-
 
             SnackbarHost(hostState = snackbarHostState)
         }
@@ -131,7 +133,6 @@ fun cambiarFotoPerfil(selectedAvatar: String) {
     val currentUser = auth.currentUser
     val db = FirebaseFirestore.getInstance()
     val userRef = currentUser?.let { db.collection("usuarios").document(it.uid) }
-
     if (userRef != null) {
         userRef.update("fotoPerfil", selectedAvatar)
     }
@@ -151,9 +152,7 @@ fun AvatarItem(name: String, isSelected: Boolean, onClick: () -> Unit) {
         Image(
             painter = rememberAsyncImagePainter("https://api.dicebear.com/7.x/avataaars/png?seed=$name"),
             contentDescription = "Avatar de $name",
-            modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape),
+            modifier = Modifier.size(80.dp).clip(CircleShape),
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(20.dp))
